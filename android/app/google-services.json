@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "716256778604",
+    "project_id": "cleanpro-6c7f2",
+    "storage_bucket": "cleanpro-6c7f2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716256778604:android:3d2abee3da5cdd37447b49",
+        "android_client_info": {
+          "package_name": "com.example.clean_pro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFJSYuKT94xAG9cDqL97iaSI0bRxHUoNc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
