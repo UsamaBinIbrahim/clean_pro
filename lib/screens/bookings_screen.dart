@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:clean_pro/widgets/booking_card_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:clean_pro/models/booking_model.dart';
+import 'package:clean_pro/models/service_model.dart';
 
 class BookingsScreen extends StatefulWidget {
   const BookingsScreen({super.key});
@@ -9,60 +13,6 @@ class BookingsScreen extends StatefulWidget {
 
 class _BookingsScreenState extends State<BookingsScreen> {
   int _selectedIndex = 0;
-  Container _buildBookingCard() {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: Colors.lightBlue.shade50,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade400,
-            blurRadius: 8,
-            blurStyle: BlurStyle.outer,
-          ),
-        ],
-      ),
-      width: double.infinity,
-      height: 64,
-      margin: EdgeInsets.all(8),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Deep Cleaning',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-                ),
-                Text('2-5-2025 10:00 am'),
-              ],
-            ),
-            TextButton.icon(
-              icon: Icon(Icons.cancel_outlined, color: Colors.red.shade400),
-              label: Text(
-                'Cancel',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.red.shade400,
-                ),
-              ),
-              onPressed: () {},
-              style: TextButton.styleFrom(
-                iconSize: 28,
-                minimumSize: Size(24, 24),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,30 +74,42 @@ class _BookingsScreenState extends State<BookingsScreen> {
             Expanded(
               child: TabBarView(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                        ],
-                      ),
-                    ),
+                  FutureBuilder(
+                    future: fetchBookingsAndServices(),
+                    builder: (context, asyncSnapshot) {
+                      if (asyncSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (asyncSnapshot.hasError) {
+                        return const Center(
+                          child: Text('Error loading bookings'),
+                        );
+                      }
+
+                      final bookings =
+                          asyncSnapshot.data!['bookings'] as List<Booking>;
+                      final services =
+                          asyncSnapshot.data!['services']
+                              as Map<String, Service>;
+
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListView.builder(
+                          itemCount: bookings.length,
+                          itemBuilder: (context, index) {
+                            final booking = bookings[index];
+                            if (booking.status == 'pending') {
+                              final service = services[booking.serviceId];
+                              return BookingCardWidget(
+                                booking: booking,
+                                service: service!,
+                              );
+                            }
+                            return null;
+                          },
+                        ),
+                      );
+                    },
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -155,22 +117,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                          _buildBookingCard(),
-                        ],
+                        children: [],
                       ),
                     ),
                   ),
@@ -181,5 +128,23 @@ class _BookingsScreenState extends State<BookingsScreen> {
         ),
       ),
     );
+  }
+
+  Future<Map<String, dynamic>> fetchBookingsAndServices() async {
+    final bookingsSnap = await FirebaseFirestore.instance
+        .collection('bookings')
+        .get();
+    final servicesSnap = await FirebaseFirestore.instance
+        .collection('services')
+        .get();
+    final bookings = bookingsSnap.docs
+        .map((doc) => Booking.fromFirestore(doc.data(), doc.id))
+        .toList();
+    final services = {
+      for (var doc in servicesSnap.docs)
+        doc.id: Service.fromFirestore(doc.data(), doc.id),
+    };
+
+    return {'bookings': bookings, 'services': services};
   }
 }

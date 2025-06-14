@@ -41,7 +41,7 @@ class _OnboardScreenState extends State<OnboardScreen>
         ),
         PageViewModel(
           title: 'Best Cleaning Services',
-          body: 'Check plenty of services that feeds your pleasure',
+          body: 'Check plenty of services that fit your needs',
           image: Center(
             child: Gif(
               controller: _gifController,
@@ -55,10 +55,18 @@ class _OnboardScreenState extends State<OnboardScreen>
           ),
         ),
         PageViewModel(
-          title: 'User Friendly Booking',
+          title: 'User-Friendly Booking',
           body: 'Book your next services in few button clicks',
-          image: Center(
-            child: Image.asset('images/clean_hand_animation.gif', height: 200),
+          image: Gif(
+            height: 250,
+            fit: BoxFit.cover,
+            controller: _gifController,
+            image: AssetImage('images/checkmark_animation.gif'),
+            autostart: Autostart.no,
+            onFetchCompleted: () {
+              _gifController.reset();
+              _gifController.forward();
+            },
           ),
         ),
       ],

@@ -37,6 +37,7 @@ dependencies:
   introduction_screen: ^3.1.17
   gif: ^2.3.0
   firebase_core: ^3.13.1
+  cloud_firestore: ^5.6.8
 
 dev_dependencies:
   flutter_test:
@@ -63,9 +64,16 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/clean_hand_animation.gif
+    - assets/images/checkmark_animation.gif
     - assets/images/clean_pro_logo.webp
     - assets/images/clean_pro_logo_removebg.png
-    - assets/images/carpet_and_furniture_cleaning.png
+    - assets/images/services_images/carpet_and_furniture_cleaning.png
+    - assets/images/services_images/window_cleaning.png
+    - assets/images/services_images/solar_panel_cleaning.png
+    - assets/images/services_images/house_keeping.png
+    - assets/images/services_images/sterilization.png
+    - assets/images/services_images/pest_control.png
+    - assets/images/services_images/stewarding.png
     # - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
