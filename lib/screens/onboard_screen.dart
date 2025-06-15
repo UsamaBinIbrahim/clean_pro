@@ -34,8 +34,8 @@ class _OnboardScreenState extends State<OnboardScreen>
           body: 'Make your day cleaner',
           image: Center(
             child: Image.asset(
-              'images/clean_pro_logo_removebg.png',
-              height: 250,
+              'assets/images/clean_pro_logo_removebg.png',
+              height: 250, package: null,
             ),
           ),
         ),
@@ -45,7 +45,7 @@ class _OnboardScreenState extends State<OnboardScreen>
           image: Center(
             child: Gif(
               controller: _gifController,
-              image: AssetImage('images/clean_hand_animation.gif'),
+              image: AssetImage('assets/images/clean_hand_animation.gif'),
               autostart: Autostart.no,
               onFetchCompleted: () {
                 _gifController.reset();
@@ -61,7 +61,7 @@ class _OnboardScreenState extends State<OnboardScreen>
             height: 250,
             fit: BoxFit.cover,
             controller: _gifController,
-            image: AssetImage('images/checkmark_animation.gif'),
+            image: AssetImage('assets/images/checkmark_animation.gif'),
             autostart: Autostart.no,
             onFetchCompleted: () {
               _gifController.reset();

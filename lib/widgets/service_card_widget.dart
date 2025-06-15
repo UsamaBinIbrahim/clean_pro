@@ -18,7 +18,7 @@ class ServiceCardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         image: DecorationImage(
-          image: AssetImage('images/services_images/$imageName'),
+          image: AssetImage('assets/images/services_images/$imageName'),
           fit: BoxFit.cover,
         ),
         boxShadow: [
